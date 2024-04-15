@@ -12,8 +12,9 @@ var cors = require('cors');
 const multer = require("multer");
 var app = express(); 
 // Body Parser Middleware
-app.use(bodyParser.json()); 
+//app.use(bodyParser.json()); 
 app.use(cors());
+app.use(bodyParser.urlencoded({extended: true}));
 
 
 //Setting up server
@@ -40,7 +41,7 @@ app.get("/",function(req,res){
 
 app.get("/api/getEmpleados", function(req , res){
     
-    dbQuery("SELECT * FROM empleado").then((value) => {
+    GetQuery("SELECT * FROM empleado").then((value) => {
         res.send(value)
     })
 
@@ -48,12 +49,12 @@ app.get("/api/getEmpleados", function(req , res){
 
 app.get("/api/getReportes", function(req,res){
     qry = "SELECT reporte.id,empleado.nombre AS nombreEmpleado,ubicacion.nombre AS ubicacion,motivoreporte.descripcion AS motivo,fechageneracion,reporte.descripcion FROM reporte INNER JOIN empleado ON empleado.id = reporte.generadopor INNER JOIN ubicacion ON ubicacion.id = reporte.ubicacion INNER JOIN motivoreporte ON motivoreporte.id = reporte.motivo"
-    dbQuery(qry).then((value) => {
+    GetQuery(qry).then((value) => {
         res.send(value)
     })
-})
+})< 
 
-function dbQuery(qry) {
+function GetQuery(qry) {
     var dbConn = new sql.ConnectionPool(dbConfig);
     return dbConn.connect().then(function () {
         var request = new sql.Request(dbConn);
@@ -76,12 +77,26 @@ app.post("/api/v1/employee", function(req , res){
     res.send("done")
 });
 
-app.post("/api/prueba",function(req,res){
-    console.log("lol")
+// Este POST ya inserta la informacion a la tabla reporte mientras la información se mande a través de url-encoded
+app.post('/api/newReport', (req, res) => {
+    ubicacion = parseInt(req.body.ubicacion);
+    motivo = parseInt(req.body.motivo);
+    descripcion = req.body.descripcion;
+    //fechageneracion = new sql.Date()
+    estatus = parseInt(req.body.estatus);
+    generadopor = parseInt(req.body.generadopor);
     console.log(req.body)
-    res.json(req.body)
+
+    if (ubicacion && motivo && estatus && generadopor) {
+        qry = `INSERT INTO reporte (generadopor,estatus,ubicacion,motivo,fechageneracion,descripcion) VALUES (${req.body.generadopor},1,${req.body.ubicacion},${req.body.motivo},GETDATE(),'${req.body.descripcion}')`
+        insertData(qry)
+        res.sendStatus(200);
+    }
+    else {
+        res.sendStatus(400);
+    }
     
-})
+});
 
 
 const upload = multer ({ dest: "uploads"})
@@ -92,13 +107,14 @@ app.post("/upload",function(req,res){
 })
 
 
-function insertEmployees() {
+function insertData(qry) {
     var dbConn = new sql.ConnectionPool(dbConfig);
     dbConn.connect().then(function () {
         var transaction = new sql.Transaction(dbConn);
         transaction.begin().then(function () {
             var request = new sql.Request(transaction);
-            request.query("INSERT INTO empleado (nombre,rol,puntos) VALUES ('Jose Mauricio Olivares',5,100000);")
+            
+            request.query(qry)
             .then(function     () {
                 transaction.commit().then(function (resp) {
                     console.log("lol")
