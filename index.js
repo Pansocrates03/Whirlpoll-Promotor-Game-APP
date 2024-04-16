@@ -88,7 +88,7 @@ app.post('/api/newReport', (req, res) => {
     console.log(req.body)
 
     if (ubicacion && motivo && estatus && generadopor) {
-        qry = `INSERT INTO reporte (generadopor,estatus,ubicacion,motivo,fechageneracion,descripcion) VALUES (${req.body.generadopor},1,${req.body.ubicacion},${req.body.motivo},GETDATE(),'${req.body.descripcion}')`
+        qry = `INSERT INTO reporte(generadopor,estatus,ubicacion,motivo,fechageneracion,descripcion) VALUES (${req.body.generadopor},1,${req.body.ubicacion},${req.body.motivo},GETDATE(),'${req.body.descripcion}')`
         insertData(qry)
         res.sendStatus(200);
     }
