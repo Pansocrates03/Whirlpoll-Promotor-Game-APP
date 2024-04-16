@@ -23,16 +23,8 @@ app.use(bodyParser.urlencoded({extended: true}));
     console.log(`App now running on http://localhost:${port}`);
  });
 
- // Setting up the database
- var dbConfig = {
-    user:  "Pansocrates03_SQLLogin_1",
-    password: "oh3oumfqif",
-    server: "WhirlPromoApp.mssql.somee.com",
-    database: "WhirlPromoApp",
-    options: {
-        trustServerCertificate: true,
-    }
-};
+// Setting up the database
+const dbConfig = require("./database/db.config.js");
 
 // Setting up the getters
 app.get("/",function(req,res){
