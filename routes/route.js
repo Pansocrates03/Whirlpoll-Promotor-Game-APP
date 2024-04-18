@@ -1,10 +1,12 @@
-const express = require('express');
-const router = express.Router();
+const express = require('express');     // Framework en el que se desarrolla el api
+const router = express.Router();        // Mantiene las funciones get/post en archivos separados
 const fs = require("fs")
-const path = require("path")
+//const path = require("path")
 var sql = require("mssql");
 const multer = require("multer");
-dbConfig = require("../database/db.config")
+const path = require("path")
+
+dbConfig = require("../database/db.config")     // Información de la base de datos
 
 
 
@@ -79,13 +81,24 @@ router.post('/api/newReport', function(req,res){
 // Upload images (no se ha terminado aun)
 const upload = multer ({ dest: "uploads"})
 
-router.post("/upload",function(req,res){
-    res.send("Upload Succesfully")
-})
+router.post("/upload",
+    upload.single("file" /* name attribute of <file> element in your form */),
+    (req, res) => {
+      const tempPath = req.file.path;
 
+      fs.rename(tempPath,tempPath + ".png",function(err){
+        if(err){
+            console.log("err", err);
+            res.status(500);
+        }
+        res
+            .status(200)
+            .contentType("text/plain")
+            .end("File uploaded!");
+      })
 
-
-
+    }
+  );
 
 
 
