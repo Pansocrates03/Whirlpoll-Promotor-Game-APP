@@ -35,11 +35,19 @@ class MainController {
     }
 
     async getReportes(req,res){
-        var qry = "SELECT reporte.id,empleado.nombre AS nombreEmpleado,ubicacion.nombre AS ubicacion,motivoreporte.descripcion AS motivo,fechageneracion,reporte.descripcion FROM reporte INNER JOIN empleado ON empleado.id = reporte.generadopor INNER JOIN ubicacion ON ubicacion.id = reporte.ubicacion INNER JOIN motivoreporte ON motivoreporte.id = reporte.motivo"
+        var qry = "SELECT reporte.id,empleado.nombre AS nombreEmpleado,ubicacion.nombre AS ubicacion,motivoreporte.descripcion AS motivo,fechageneracion,reporte.descripcion, imagen.link FROM reporte INNER JOIN empleado ON empleado.id = reporte.generadopor INNER JOIN ubicacion ON ubicacion.id = reporte.ubicacion INNER JOIN motivoreporte ON motivoreporte.id = reporte.motivo LEFT JOIN imagen ON imagen.idreporte = reporte.id"
         GetQuery(qry).then((value) => {
             res.send(value)
         })
     }
+
+    async getImage(req,res){
+
+        const file = `./uploads/${req.params.path}`;
+        res.download(file); // Set disposition and send it.
+          
+    }
+
 }
 
 

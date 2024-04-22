@@ -17,6 +17,7 @@ const getQueryController = require('../controllers/getQueryController.js');
 router.get("/",getQueryController.main);
 router.get("/api/getEmpleados", getQueryController.getEmpleados);
 router.get("/api/getReportes", getQueryController.getReportes);
+router.get('/api/getImage/:path', getQueryController.getImage);
 
 
 //////////// SETTING UP THE SETTERS ////////////
