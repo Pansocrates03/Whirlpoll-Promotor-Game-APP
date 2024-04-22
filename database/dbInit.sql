@@ -1,6 +1,6 @@
 -- WhirlPool
 -- Esteban Sierra Baccio
--- Apr/10/2024
+-- Apr/19/2024
 -- https://lucid.app/lucidchart/3f05bc08-c811-4fe6-9f29-0d19de39caee/edit?invitationId=inv_886097ae-b5b1-481e-be8a-f6f0995107d7&page=0_0#
 
 CREATE DATABASE WhirlPool;
@@ -41,7 +41,7 @@ CREATE TABLE estatus(
 
 CREATE TABLE motivoreporte(
     id INT PRIMARY KEY IDENTITY,
-    descripcion VARCHAR(25)
+    descripcion VARCHAR(255)
 )
 
 CREATE TABLE empleadonotif(
@@ -79,13 +79,34 @@ CREATE TABLE imagen(
     link VARCHAR(25)
 )
 
--- INSERTS
+-- INSERT PRE-BUILT TABLES
 
 INSERT INTO rol (descripcion) VALUES ('CEO'); -- 1
 INSERT INTO rol (descripcion) VALUES ('vendedor'); -- 2
 INSERT INTO rol (descripcion) VALUES ('promotor'); -- 3
 INSERT INTO rol (descripcion) VALUES ('operador'); -- 4
 INSERT INTO rol (descripcion) VALUES ('gerente de finanzas'); -- 5
+
+INSERT INTO estatus (descripcion) VALUES ('no revisado'); -- 1
+INSERT INTO estatus (descripcion) VALUES ('en proceso'); -- 2
+INSERT INTO estatus (descripcion) VALUES ('revisado'); -- 3
+
+INSERT INTO motivoreporte (descripcion) VALUES ('Nada que reportar'); -- id = 1
+INSERT INTO motivoreporte (descripcion) VALUES ('El preico no está visible'); -- id = 2
+INSERT INTO motivoreporte (descripcion) VALUES ('El producto está sucio'); -- id = 3
+INSERT INTO motivoreporte (descripcion) VALUES ('Espacio desacomodado'); -- id = 4
+INSERT INTO motivoreporte (descripcion) VALUES ('El producto no tiene ficha técnica a la vista'); -- id = 5
+INSERT INTO motivoreporte (descripcion) VALUES ('El producto que se muestra es muy viejo'); -- id = 6
+INSERT INTO motivoreporte (descripcion) VALUES ('Desabasto de productos'); -- id = 7
+INSERT INTO motivoreporte (descripcion) VALUES ('Otro motivo'); -- id = 8
+
+INSERT INTO desafio (puntos,descripcion) VALUES (100, 'Encuentra un nuevo piso de venta'); -- 1
+INSERT INTO desafio (puntos,descripcion) VALUES (200, 'Realiza 2 reportes el dia de hoy'); -- 2
+INSERT INTO desafio (puntos,descripcion) VALUES (10, 'Visita 5 pisos de venta'); -- 3
+INSERT INTO desafio (puntos,descripcion) VALUES (70, 'Sube de nivel a tu personaje'); -- 4
+INSERT INTO desafio (puntos,descripcion) VALUES (400, 'Obten 3 reportes aceptados'); -- 5
+
+-- Insert variable tables
 
 INSERT INTO ubicacion (nombre,latitud,longitud) VALUES ('Tienda Whirlpool',25.67071757873061, -100.32908301595825);
 INSERT INTO ubicacion (nombre,latitud,longitud) VALUES ('Liverpool Melchor Ocampo',25.667825614434125, -100.31601547730031);
@@ -98,22 +119,6 @@ INSERT INTO empleado (nombre,rol,puntos) VALUES ('empleado2@gmail.com',2,0);
 INSERT INTO empleado (nombre,rol,puntos) VALUES ('empleado3@gmail.com',3,20);
 INSERT INTO empleado (nombre,rol,puntos) VALUES ('nombre_apellido_segundoapellido@yahoo.com.mx',4,500);
 INSERT INTO empleado (nombre,rol,puntos) VALUES ('andresManuelLopezObrador@gmail.com',5,100000);
-
-INSERT INTO estatus (descripcion) VALUES ('no revisado'); -- 1
-INSERT INTO estatus (descripcion) VALUES ('en proceso'); -- 2
-INSERT INTO estatus (descripcion) VALUES ('revisado'); -- 3
-
-INSERT INTO motivoreporte (descripcion) VALUES ('Nada que reportar');
-INSERT INTO motivoreporte (descripcion) VALUES ('Sin mercancía');
-INSERT INTO motivoreporte (descripcion) VALUES ('Espacio sucio');
-INSERT INTO motivoreporte (descripcion) VALUES ('Espacio desordenado');
-INSERT INTO motivoreporte (descripcion) VALUES ('Sin Funcionamiento');
-
-INSERT INTO desafio (puntos,descripcion) VALUES (100, 'Encuentra un nuevo piso de venta'); -- 1
-INSERT INTO desafio (puntos,descripcion) VALUES (200, 'Realiza 2 reportes el dia de hoy'); -- 2
-INSERT INTO desafio (puntos,descripcion) VALUES (10, 'Visita 5 pisos de venta'); -- 3
-INSERT INTO desafio (puntos,descripcion) VALUES (70, 'Sube de nivel a tu personaje'); -- 4
-INSERT INTO desafio (puntos,descripcion) VALUES (400, 'Obten 3 reportes aceptados'); -- 5
 
 -- Como el promotor es el número 2 entonces solo el 2 puede resolver las dudas.
 INSERT INTO reporte (generadopor,estatus,ubicacion,motivo,fechageneracion,descripcion) VALUES (2,2,1,2,'2024-04-14 14:30:15','Ya no hay lavadoras del modelo 8MWTW1844WMG');

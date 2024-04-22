@@ -91,6 +91,13 @@ router.post("/upload",
             console.log("err", err);
             res.status(500);
         }
+
+        insertData("INSERT INTO imagen (idreporte,link) VALUES (@@IDENTITY,'este es un link');");
+
+
+
+
+
         res
             .status(200)
             .contentType("text/plain")
