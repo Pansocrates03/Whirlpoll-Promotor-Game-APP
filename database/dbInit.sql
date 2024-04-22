@@ -76,7 +76,7 @@ CREATE TABLE empleadodesafio(
 CREATE TABLE imagen(
     id INT PRIMARY KEY IDENTITY,
     idreporte INT FOREIGN KEY REFERENCES reporte(id),
-    link VARCHAR(25)
+    link VARCHAR(255)
 )
 
 -- INSERT PRE-BUILT TABLES

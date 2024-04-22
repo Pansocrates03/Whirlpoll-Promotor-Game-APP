@@ -21,6 +21,23 @@ router.get("/api/getReportes", getQueryController.getReportes);
 
 //////////// SETTING UP THE SETTERS ////////////
 
+function GetQuery(qry) {
+    var dbConn = new sql.ConnectionPool(dbConfig);
+    return dbConn.connect().then(function () {
+        var request = new sql.Request(dbConn);
+        return request.query(qry).then(function (resp) {
+            //console.log(resp);
+            dbConn.close();
+            return resp
+        }).catch(function (err) {
+            console.log(err);
+            dbConn.close();
+        });
+    }).catch(function (err) {
+        console.log(err);
+    });
+}
+
 function insertData(qry) {
     var dbConn = new sql.ConnectionPool(dbConfig);
     dbConn.connect().then(function () {
@@ -57,6 +74,7 @@ const postQueryController = require("../controllers/postQueryController.js");
 router.post("/api/test", postQueryController.test);
 
 // Este POST ya inserta la informacion a la tabla reporte mientras la información se mande a través de url-encoded
+/*
 router.post('/api/newReport', function(req,res){
     ubicacion = parseInt(req.body.ubicacion);
     motivo = parseInt(req.body.motivo);
@@ -77,14 +95,20 @@ router.post('/api/newReport', function(req,res){
     
 }
 );
+*/
 
 // Upload images (no se ha terminado aun)
 const upload = multer ({ dest: "uploads"})
 
-router.post("/upload",
+router.post("/api/newReport",
     upload.single("file" /* name attribute of <file> element in your form */),
     (req, res) => {
-      const tempPath = req.file.path;
+
+      const tempPath = req.file.path; //image name
+      const ubi = parseInt(req.body.ubicacion);
+      const mot = parseInt(req.body.motivo);
+      const desc = req.body.descripcion;
+      const gen = parseInt(req.body.generadopor);
 
       fs.rename(tempPath,tempPath + ".png",function(err){
         if(err){
@@ -92,10 +116,26 @@ router.post("/upload",
             res.status(500);
         }
 
-        insertData("INSERT INTO imagen (idreporte,link) VALUES (@@IDENTITY,'este es un link');");
+        const myArray = (tempPath+".png").split("\\");
+        console.log(myArray);
+
+        if (ubi && mot && gen) {
+            qry = `INSERT INTO reporte(generadopor,estatus,ubicacion,motivo,fechageneracion,descripcion) OUTPUT Inserted.ID VALUES (${gen},1,${ubi},${mot},GETDATE(),'${desc}')`
+            insertData(qry)
+        }
+        else {
+            res.sendStatus(400);
+        }
+
+        GetQuery("SELECT id FROM reporte WHERE id = ( SELECT max(id) FROM reporte );").then((value) => {
+            algoBien = value.recordset[0].id;
+            insertData("INSERT INTO imagen (idreporte,link) VALUES ("+ algoBien +",' " + myArray[1] + " ');");
+        })
+
+        
 
 
-
+        
 
 
         res

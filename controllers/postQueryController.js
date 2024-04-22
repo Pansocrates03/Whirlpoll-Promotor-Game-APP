@@ -65,5 +65,5 @@ class MainController {
 
 
 
-const getters = new MainController()
-module.exports = getters;
+const postControllers = new MainController()
+module.exports = postControllers;
