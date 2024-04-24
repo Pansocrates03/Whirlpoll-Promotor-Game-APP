@@ -1,14 +1,10 @@
+/*
+    En este archivo se encuentran las rutas del API
+*/
+
 const express = require('express');     // Framework en el que se desarrolla el api
 const router = express.Router();        // Mantiene las funciones get/post en archivos separados
-const fs = require("fs")
-//const path = require("path")
-var sql = require("mssql");
 const multer = require("multer");
-const path = require("path")
-
-dbConfig = require("../database/db.config")     // Información de la base de datos
-
-
 
 //////////// SETTING UP THE GETTERS ////////////
 
@@ -22,132 +18,11 @@ router.get('/api/getImage/:path', getQueryController.getImage);
 
 //////////// SETTING UP THE SETTERS ////////////
 
-function GetQuery(qry) {
-    var dbConn = new sql.ConnectionPool(dbConfig);
-    return dbConn.connect().then(function () {
-        var request = new sql.Request(dbConn);
-        return request.query(qry).then(function (resp) {
-            //console.log(resp);
-            dbConn.close();
-            return resp
-        }).catch(function (err) {
-            console.log(err);
-            dbConn.close();
-        });
-    }).catch(function (err) {
-        console.log(err);
-    });
-}
-
-function insertData(qry) {
-    var dbConn = new sql.ConnectionPool(dbConfig);
-    dbConn.connect().then(function () {
-        var transaction = new sql.Transaction(dbConn);
-        transaction.begin().then(function () {
-            var request = new sql.Request(transaction);
-            
-            request.query(qry)
-            .then(function     () {
-                transaction.commit().then(function (resp) {
-                    console.log(resp);
-                    dbConn.close();
-                }).catch(function (err) {
-                    console.log("Error in Transaction Commit " + err);
-                    dbConn.close();
-                });
-            }).catch(function (err) {
-                console.log("Error in Transaction Begin " + err);
-                dbConn.close();
-            })
-        }).catch(function (err) {
-            console.log(err);
-            dbConn.close();
-        }).catch(function (err) {
-        //12.
-        console.log(err);
-    });
-  });
-}   
-
-
 const postQueryController = require("../controllers/postQueryController.js");
-
-router.post("/api/test", postQueryController.test);
-
-// Este POST ya inserta la informacion a la tabla reporte mientras la información se mande a través de url-encoded
-/*
-router.post('/api/newReport', function(req,res){
-    ubicacion = parseInt(req.body.ubicacion);
-    motivo = parseInt(req.body.motivo);
-    descripcion = req.body.descripcion;
-    //fechageneracion = new sql.Date()
-    estatus = parseInt(req.body.estatus);
-    generadopor = parseInt(req.body.generadopor);
-    console.log(req.body)
-
-    if (ubicacion && motivo && estatus && generadopor) {
-        qry = `INSERT INTO reporte(generadopor,estatus,ubicacion,motivo,fechageneracion,descripcion) VALUES (${req.body.generadopor},1,${req.body.ubicacion},${req.body.motivo},GETDATE(),'${req.body.descripcion}')`
-        insertData(qry)
-        res.sendStatus(200);
-    }
-    else {
-        res.sendStatus(400);
-    }
-    
-}
-);
-*/
-
-// Upload images (no se ha terminado aun)
 const upload = multer ({ dest: "uploads"})
 
-router.post("/api/newReport",
-    upload.single("file" /* name attribute of <file> element in your form */),
-    (req, res) => {
-
-      const tempPath = req.file.path; //image name
-      const ubi = parseInt(req.body.ubicacion);
-      const mot = parseInt(req.body.motivo);
-      const desc = req.body.descripcion;
-      const gen = parseInt(req.body.generadopor);
-
-      fs.rename(tempPath,tempPath + ".png",function(err){
-        if(err){
-            console.log("err", err);
-            res.status(500);
-        }
-
-        const myArray = (tempPath+".png").split("\\");
-        console.log(myArray);
-
-        if (ubi && mot && gen) {
-            qry = `INSERT INTO reporte(generadopor,estatus,ubicacion,motivo,fechageneracion,descripcion) OUTPUT Inserted.ID VALUES (${gen},1,${ubi},${mot},GETDATE(),'${desc}')`
-            insertData(qry)
-        }
-        else {
-            res.sendStatus(400);
-        }
-
-        GetQuery("SELECT id FROM reporte WHERE id = ( SELECT max(id) FROM reporte );").then((value) => {
-            algoBien = value.recordset[0].id;
-            insertData("INSERT INTO imagen (idreporte,link) VALUES ("+ algoBien +",' " + myArray[1] + " ');");
-        })
-
-        
-
-
-        
-
-
-        res
-            .status(200)
-            .contentType("text/plain")
-            .end("File uploaded!");
-      })
-
-    }
-  );
-
+router.post("/api/test", postQueryController.test);
+router.post("/api/newReport", upload.single("file"), postQueryController.newReport);
 
 
 module.exports = router
