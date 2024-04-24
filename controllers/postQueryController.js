@@ -1,5 +1,6 @@
 var sql = require("mssql");
-dbConfig = require("../database/db.config")
+dbConfig = require("../database/db.config");
+const fs = require("fs");
 
 
 // Función para hacer un INSERT a la base
@@ -33,6 +34,23 @@ function insertData(qry) {
   });
 }
 
+function GetQuery(qry) {
+    var dbConn = new sql.ConnectionPool(dbConfig);
+    return dbConn.connect().then(function () {
+        var request = new sql.Request(dbConn);
+        return request.query(qry).then(function (resp) {
+            //console.log(resp);
+            dbConn.close();
+            return resp
+        }).catch(function (err) {
+            console.log(err);
+            dbConn.close();
+        });
+    }).catch(function (err) {
+        console.log(err);
+    });
+}
+
 
 // Controlador principal
 class MainController {
@@ -42,22 +60,44 @@ class MainController {
     }
 
     async newReport(req,res){
-        ubicacion = parseInt(req.body.ubicacion);
-        motivo = parseInt(req.body.motivo);
-        descripcion = req.body.descripcion;
-        //fechageneracion = new sql.Date()
-        estatus = parseInt(req.body.estatus);
-        generadopor = parseInt(req.body.generadopor);
-        console.log(req.body)
-    
-        if (ubicacion && motivo && estatus && generadopor) {
-            qry = `INSERT INTO reporte(generadopor,estatus,ubicacion,motivo,fechageneracion,descripcion) VALUES (${req.body.generadopor},1,${req.body.ubicacion},${req.body.motivo},GETDATE(),'${req.body.descripcion}')`
+
+      const tempPath = req.file.path; //image name
+      const ubi = parseInt(req.body.ubicacion);
+      const mot = parseInt(req.body.motivo);
+      const desc = req.body.descripcion;
+      const gen = parseInt(req.body.generadopor);
+
+      fs.rename(tempPath,tempPath + ".png",function(err){
+        if(err){
+            console.log("err", err);
+            res.status(500);
+        }
+
+        const myArray = (tempPath+".png").split("\\");
+        console.log(myArray);
+        let qry;
+
+        if (ubi && mot && gen) {
+            qry = `INSERT INTO reporte(generadopor,estatus,ubicacion,motivo,fechageneracion,descripcion) OUTPUT Inserted.ID VALUES (${gen},1,${ubi},${mot},GETDATE(),'${desc}')`
             insertData(qry)
-            res.sendStatus(200);
         }
         else {
             res.sendStatus(400);
         }
+
+        GetQuery("SELECT id FROM reporte WHERE id = ( SELECT max(id) FROM reporte );").then((value) => {
+            let algoBien = parseInt(value.recordset[0].id) + 1;
+            console.log(algoBien);
+            insertData("INSERT INTO imagen (idreporte,link) VALUES ("+ algoBien +",' " + myArray[1] + " ');");
+        })
+        
+
+
+        res
+            .status(200)
+            .contentType("text/plain")
+            .end("File uploaded!");
+      })
         
     }
 
