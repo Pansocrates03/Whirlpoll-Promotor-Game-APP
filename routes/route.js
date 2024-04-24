@@ -1,10 +1,8 @@
 const express = require('express');     // Framework en el que se desarrolla el api
 const router = express.Router();        // Mantiene las funciones get/post en archivos separados
-const fs = require("fs")
-//const path = require("path")
-var sql = require("mssql");
-const multer = require("multer");
-const path = require("path")
+const fs = require("fs")                // Permite navegar en el path
+var sql = require("mssql");             // Permite conectarnos a la base de datos
+const multer = require("multer");       // NPI
 
 dbConfig = require("../database/db.config")     // Información de la base de datos
 
