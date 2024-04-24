@@ -26,11 +26,12 @@ router.get('/api/getImage/:path', getQueryController.getImage);
 
 //////////// SETTING UP THE SETTERS ////////////
 
-const postQueryController = require("../controllers/postQueryController.js");
 const upload = multer ({ dest: "uploads"})
+const postQueryController = require("../controllers/postQueryController.js");
+
 
 router.post("/api/test", postQueryController.test);
 router.post("/api/newReport", upload.single("file"), postQueryController.newReport);
-
+router.post("/api/updateReport", upload.none(), postQueryController.updateReport);   
 
 module.exports = router

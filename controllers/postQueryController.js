@@ -55,10 +55,6 @@ function GetQuery(qry) {
 // Controlador principal
 class MainController {
 
-    async test(req,res){
-        res.send("tudo bem")
-    }
-
     async newReport(req,res){
 
       const tempPath = req.file.path; //image name
@@ -74,24 +70,18 @@ class MainController {
         }
 
         const myArray = (tempPath+".png").split("\\");
-        console.log(myArray);
         let qry;
 
         if (ubi && mot && gen) {
             qry = `INSERT INTO reporte(generadopor,estatus,ubicacion,motivo,fechageneracion,descripcion) OUTPUT Inserted.ID VALUES (${gen},1,${ubi},${mot},GETDATE(),'${desc}')`
             insertData(qry)
         }
-        else {
-            res.sendStatus(400);
-        }
+        else res.sendStatus(400);
 
         GetQuery("SELECT id FROM reporte WHERE id = ( SELECT max(id) FROM reporte );").then((value) => {
             let algoBien = parseInt(value.recordset[0].id) + 1;
-            console.log(algoBien);
             insertData("INSERT INTO imagen (idreporte,link) VALUES ("+ algoBien +",' " + myArray[1] + " ');");
         })
-        
-
 
         res
             .status(200)
@@ -99,6 +89,24 @@ class MainController {
             .end("File uploaded!");
       })
         
+    }
+
+    async updateReport(req,res){
+        let userID = req.body.userID;
+        let points = req.body.points;
+        
+        if (parseInt(userID) && parseInt(points)){
+            insertData(`UPDATE empleado SET puntos = puntos + ${points} WHERE id = ${userID};`);
+            res
+                .status(200)
+                .contentType("text/plain")
+                .end("infoDone");
+        } else {
+            res
+                .status(500)
+                .contentType("text/plain")
+                .end("error");
+        }
     }
 
 }
