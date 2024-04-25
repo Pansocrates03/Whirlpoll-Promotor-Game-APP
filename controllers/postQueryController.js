@@ -65,14 +65,16 @@ class MainController {
 
       console.log("El path original de la imagen es:", tempPath);
 
-      fs.rename(tempPath,tempPath + ".png",function(err){
+      let fileName = (tempPath+".png").split("\\")[1];
+
+      console.log("El nuevo nombre será:", fileName);
+
+      fs.rename(tempPath,fileName,function(err){
         if(err){
             console.log("err", err);
             res.status(500);
         }
-        //console.log(tempPath)
-        const myArray = (tempPath+".png").split("\\");
-        console.log("New file named:", myArray[1])
+
         let qry;
 
         if (ubi && mot && gen) {
@@ -83,7 +85,7 @@ class MainController {
 
         GetQuery("SELECT id FROM reporte WHERE id = ( SELECT max(id) FROM reporte );").then((value) => {
             let algoBien = parseInt(value.recordset[0].id) + 1;
-            insertData("INSERT INTO imagen (idreporte,link) VALUES ("+ algoBien +",' " + myArray[1] + " ');");
+            insertData("INSERT INTO imagen (idreporte,link) VALUES ("+ algoBien +",' " + fileName + " ');");
         })
 
         res
