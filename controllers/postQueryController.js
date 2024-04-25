@@ -63,12 +63,14 @@ class MainController {
       const desc = req.body.descripcion;
       const gen = parseInt(req.body.generadopor);
 
+      console.log("El path original de la imagen es:", tempPath);
+
       fs.rename(tempPath,tempPath + ".png",function(err){
         if(err){
             console.log("err", err);
             res.status(500);
         }
-
+        //console.log(tempPath)
         const myArray = (tempPath+".png").split("\\");
         console.log("New file named:", myArray[1])
         let qry;
