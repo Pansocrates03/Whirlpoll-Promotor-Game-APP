@@ -51,6 +51,10 @@ function GetQuery(qry) {
     });
 }
 
+function getFilename(fullPath) {
+    return fullPath.replace(/^.*[\\\/]/, '');
+}
+
 
 // Controlador principal
 class MainController {
@@ -75,7 +79,7 @@ class MainController {
             res.status(500);
         }        
 
-        fileName = fileName.split("\\")[1];
+        fileName = getFilename(fileName);
         console.log("El nombre del archivo es:", fileName);
 
         let qry;
