@@ -65,15 +65,18 @@ class MainController {
 
       console.log("El path original de la imagen es:", tempPath);
 
-      let fileName = (tempPath+".png").split("\\")[1];
+      let fileName = (tempPath+".png");
 
-      console.log("El nuevo nombre será:", fileName);
+      console.log("El nuevo nombre es:", fileName);
 
       fs.rename(tempPath,fileName,function(err){
         if(err){
             console.log("err", err);
             res.status(500);
-        }
+        }        
+
+        fileName = fileName.split("\\")[1];
+        console.log("El nombre del archivo es:", fileName);
 
         let qry;
 
