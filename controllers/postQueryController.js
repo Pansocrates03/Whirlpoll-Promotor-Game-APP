@@ -70,6 +70,7 @@ class MainController {
         }
 
         const myArray = (tempPath+".png").split("\\");
+        console.log("New file named:", myArray[1])
         let qry;
 
         if (ubi && mot && gen) {
