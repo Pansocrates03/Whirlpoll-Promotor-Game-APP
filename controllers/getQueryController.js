@@ -26,7 +26,7 @@ function GetQuery(qry) {
 class MainController {
 
     async main(req,res){
-        res.send("wassup bitch");
+        res.send("Currently running version 0.10");
     }
 
     async getEmpleados(req,res){
