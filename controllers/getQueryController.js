@@ -26,7 +26,7 @@ function GetQuery(qry) {
 class MainController {
 
     async main(req,res){
-        res.send("Currently running version 0.10");
+        res.send("Currently running v0.10.0");
     }
 
     async getEmpleados(req,res){
