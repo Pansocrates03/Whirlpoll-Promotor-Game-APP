@@ -29,8 +29,6 @@ router.get('/api/getImage/:path', getQueryController.getImage);
 const upload = multer ({ dest: "uploads"})
 const postQueryController = require("../controllers/postQueryController.js");
 
-
-router.post("/api/test", postQueryController.test);
 router.post("/api/newReport", upload.single("file"), postQueryController.newReport);
 router.post("/api/updateReport", upload.none(), postQueryController.updateReport);   
 

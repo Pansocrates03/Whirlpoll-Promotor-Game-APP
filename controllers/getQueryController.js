@@ -44,7 +44,8 @@ class MainController {
     async getImage(req,res){
 
         const file = `./uploads/${req.params.path}`;
-        res.download(file); // Set disposition and send it.
+        res.contentType('image/png')
+        res.send(file); // Set disposition and send it.
           
     }
 
