@@ -1,3 +1,4 @@
+const fs = require("fs");
 var sql = require("mssql");
 dbConfig = require("../database/db.config")
 
@@ -42,10 +43,16 @@ class MainController {
     }
 
     async getImage(req,res){
-
-        const file = `./uploads/${req.params.path}`;
-        res.contentType('image/png')
-        res.send(file); // Set disposition and send it.
+        const file = fs.readFile(`./public/images/${req.params.path}`,'utf-8',(err,data)=>{
+            if (err) console.log(err);
+            else {
+                res.contentType('image/png')
+                res.send(file); // Set disposition and send it.
+            }
+        }
+        
+    );
+        
           
     }
 

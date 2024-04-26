@@ -29,5 +29,7 @@ app.use(bodyParser.json());
     console.log(`App now running Locally on: http://localhost:${port}`);
  });
 
+ app.use(express.static('public'));
+
 // Se inician los links del API
 app.use(router)

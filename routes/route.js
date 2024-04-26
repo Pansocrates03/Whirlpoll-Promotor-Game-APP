@@ -25,15 +25,10 @@ router.get('/api/getImage/:path', getQueryController.getImage);     // Devuelve 
 
 //////////// SETTING UP THE SETTERS ////////////
 
-const upload = multer ({ dest: "uploads"})
+const upload = multer ({ dest: "./public/images"})
 const postQueryController = require("../controllers/postQueryController.js");
 
-<<<<<<< HEAD
-router.post("/api/newReport", upload.single("file"), postQueryController.newReport);
-router.post("/api/updateReport", upload.none(), postQueryController.updateReport);   
-=======
 router.post("/api/newReport", upload.single("file"), postQueryController.newReport);    // Crea un nuevo reporte
 router.post("/api/updateReport", upload.none(), postQueryController.updateReport);      // Le da puntos al empleado, y cambia el status
->>>>>>> 64452d815b6d9f28a08da760e348122e71964c78
 
 module.exports = router
