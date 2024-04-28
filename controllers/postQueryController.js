@@ -92,6 +92,7 @@ class MainController {
         else res.sendStatus(400);
 
         GetQuery("SELECT id FROM reporte WHERE id = ( SELECT max(id) FROM reporte );").then((value) => {
+            console.log(value.recordset[0])
             let algoBien = parseInt(value.recordset[0].id) + 1;
             insertData("INSERT INTO imagen (idreporte,link) VALUES ("+ algoBien +",' " + fileName + " ');");
         })

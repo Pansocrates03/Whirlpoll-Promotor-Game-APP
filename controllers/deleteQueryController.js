@@ -1,3 +1,9 @@
+const fs = require("fs");
+var sql = require("mssql");
+dbConfig = require("../database/db.config");
+const path = require("path");
+const pckge = require("../package.json")
+
 function GetQuery(qry) {
     var dbConn = new sql.ConnectionPool(dbConfig);
     return dbConn.connect().then(function () {
@@ -16,9 +22,12 @@ function GetQuery(qry) {
 }
 
 class MainController {
-    async restartDB(){
-        console.log("Not finished yet");
-        console.log("This function should erase everything")
+    async restartDB(req,res){
+        GetQuery("DELETE FROM imagen; DELETE FROM reporte;");
+        console.log("Deleted table 'imagen'");
+        console.log("Deleted table 'reporte'");
+        res.status(200);
+
     }
 }
 
