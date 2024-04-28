@@ -4,11 +4,7 @@
 
 const express = require('express');     // Framework en el que se desarrolla el api
 const router = express.Router();        // Mantiene las funciones get/post en archivos separados
-const fs = require("fs")
-//const path = require("path")
-var sql = require("mssql");
-const multer = require("multer");
-const path = require("path")
+const multer = require("multer");       // Permite mandar archivos a través del POST API
 
 dbConfig = require("../database/db.config")     // Información de la base de datos
 
@@ -31,11 +27,9 @@ const postQueryController = require("../controllers/postQueryController.js");
 router.post("/api/newReport", upload.single("file"), postQueryController.newReport);    // Crea un nuevo reporte
 router.post("/api/updateReport", upload.none(), postQueryController.updateReport);      // Le da puntos al empleado, y cambia el status
 
-//////////// SETTING UP THE DELETE ACTION ////////////
+//////////// SETTING UP THE DELETE ////////////
+const deleteQueryController = require("../controllers/deleteQueryController.js");
 
-router.delete('/', (req,res) => {
-    res.send("oki");
-    console.log("Lol")
-})
+router.delete('/deleteQueryController', deleteQueryController.restartDB);
 
 module.exports = router

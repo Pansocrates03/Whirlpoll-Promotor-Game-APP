@@ -14,7 +14,7 @@ const router = require("./routes/route.js");    // Las rutas del API
 // Se inicia la app
 var app = express(); 
 
-// NPI de que hace esto
+// NPI de que hace esto, pero es necesario
 app.use(cors());
 
 // Nos permite recibir un body de tipo urlencoded
@@ -29,7 +29,8 @@ app.use(bodyParser.json());
     console.log(`App now running Locally on: http://localhost:${port}`);
  });
 
- app.use(express.static('public'));
+// Makes the "public" carpeta be acces for everyone
+app.use(express.static('public'));
 
 // Se inician los links del API
 app.use(router)

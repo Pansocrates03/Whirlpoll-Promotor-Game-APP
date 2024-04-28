@@ -1,6 +1,8 @@
 const fs = require("fs");
 var sql = require("mssql");
-dbConfig = require("../database/db.config")
+dbConfig = require("../database/db.config");
+const path = require("path");
+const pckge = require("../package.json")
 
 
 // Función para obtener información de la base de datos
@@ -26,7 +28,7 @@ function GetQuery(qry) {
 class MainController {
 
     async main(req,res){
-        res.send("Currently running v0.10.0");
+        res.send(`Currently running v${pckge.version}`);
     }
 
     async getEmpleados(req,res){
@@ -36,29 +38,25 @@ class MainController {
     }
 
     async getReportes(req,res){
-        var qry = "SELECT reporte.id,empleado.nombre AS nombreEmpleado,ubicacion.nombre AS ubicacion,motivoreporte.descripcion AS motivo,fechageneracion,reporte.descripcion, imagen.link FROM reporte INNER JOIN empleado ON empleado.id = reporte.generadopor INNER JOIN ubicacion ON ubicacion.id = reporte.ubicacion INNER JOIN motivoreporte ON motivoreporte.id = reporte.motivo LEFT JOIN imagen ON imagen.idreporte = reporte.id"
+        var qry = "EXEC getReports"
         GetQuery(qry).then((value) => {
             res.send(value)
         })
     }
 
     async getImage(req,res){
-        const file = fs.readFile(`./public/images/${req.params.path}`,'utf-8',(err,data)=>{
+        
+        fs.readFile(`public/images/${req.params.path}`,(err,data)=>{
             if (err) console.log(err);
             else {
                 res.contentType('image/png')
-                res.send(file); // Set disposition and send it.
+                res.send(data); // Set disposition and send it.
+                res.end();
+                
             }
-        }
-        
-    );
-        
-          
+        });   
     }
-
 }
-
-
 
 const getters = new MainController()
 module.exports = getters;
