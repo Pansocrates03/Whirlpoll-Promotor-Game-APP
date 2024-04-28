@@ -31,4 +31,11 @@ const postQueryController = require("../controllers/postQueryController.js");
 router.post("/api/newReport", upload.single("file"), postQueryController.newReport);    // Crea un nuevo reporte
 router.post("/api/updateReport", upload.none(), postQueryController.updateReport);      // Le da puntos al empleado, y cambia el status
 
+//////////// SETTING UP THE DELETE ACTION ////////////
+
+router.delete('/', (req,res) => {
+    res.send("oki");
+    console.log("Lol")
+})
+
 module.exports = router

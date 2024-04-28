@@ -56,6 +56,11 @@ CREATE TABLE desafio(
     descripcion VARCHAR(255)
 )
 
+CREATE TABLE urgencia(
+    id INT PRIMARY KEY IDENTITY,
+    descripcion VARCHAR(25)
+)
+
 CREATE TABLE reporte(
     id INT PRIMARY KEY IDENTITY,
     generadopor INT FOREIGN KEY REFERENCES empleado(id),

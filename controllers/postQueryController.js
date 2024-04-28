@@ -66,6 +66,7 @@ class MainController {
       const mot = parseInt(req.body.motivo);
       const desc = req.body.descripcion;
       const gen = parseInt(req.body.generadopor);
+      const urg = parseInt(req.body.urgencia) || 1;
 
       console.log("El path original de la imagen es:", tempPath);
 
@@ -85,7 +86,7 @@ class MainController {
         let qry;
 
         if (ubi && mot && gen) {
-            qry = `INSERT INTO reporte(generadopor,estatus,ubicacion,motivo,fechageneracion,descripcion) OUTPUT Inserted.ID VALUES (${gen},1,${ubi},${mot},GETDATE(),'${desc}')`
+            qry = `EXEC newReport @generadopor = ${gen}, @ubicacion = ${ubi}, @motivo = ${mot}, @urgencia = ${urg}, @descripcion = '${desc}';`
             insertData(qry)
         }
         else res.sendStatus(400);
