@@ -7,8 +7,8 @@ CREATE PROCEDURE newReport
     @descripcion VARCHAR(255)
 AS
 BEGIN
-    INSERT INTO reporte(generadopor,estatus,ubicacion,motivo,fechageneracion,descripcion)
-    VALUES             (@generadopor,1,    @ubicacion,@motivo,GETDATE(),@descripcion)
+    INSERT INTO reporte(generadopor,estatus,ubicacion,motivo,fechageneracion,descripcion,urgencia)
+    VALUES             (@generadopor,1,    @ubicacion,@motivo,GETDATE(),    @descripcion,@urgencia)
 END
 GO
 
